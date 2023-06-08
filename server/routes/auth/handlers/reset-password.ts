@@ -3,10 +3,11 @@ import bcrypt from "bcryptjs";
 import express from "express";
 import prisma from "../../../prisma";
 import ResetPasswordRequest from "../../../schemas/requests/auth/reset-password-request";
+import ResetPasswordResponse from "../../../schemas/responses/auth/reset-password-response";
 import Dictionary from "../../../types/Dictionary";
 
 const resetPasswordHandler: express.RequestHandler = async (
-  req: express.Request<Dictionary, any, ResetPasswordRequest>,
+  req: express.Request<Dictionary, ResetPasswordResponse, ResetPasswordRequest>,
   res
 ) => {
   const { email, code, password } = req.body;
