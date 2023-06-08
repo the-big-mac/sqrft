@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +5,85 @@ generator client {
 datasource db {
   provider = "cockroachdb"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+
+  name     String
+  email    String @unique
+  password String
+
+  profile_picture String?
+
+  is_verified Boolean @default(false)
+
+  location Location?
+
+  email_verification_token EmailVerificationToken?
+  reset_password_token     ResetPasswordToken?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Location {
+  id String @id @default(uuid())
+
+  address_one String
+  address_two String?
+
+  city   String
+  region String
+
+  country_id String
+  country    Country @relation(fields: [country_id], references: [id])
+
+  pincode String?
+
+  latitude  Float
+  longitude Float
+
+  user_id String? @unique
+  user    User?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Country {
+  id String @id @default(uuid())
+
+  name String @unique
+
+  locations Location[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model EmailVerificationToken {
+  id String @id @default(uuid())
+
+  token      String   @unique
+  expires_at DateTime
+
+  user_id String @unique
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model ResetPasswordToken {
+  id String @id @default(uuid())
+
+  token      String   @unique
+  expires_at DateTime
+
+  user_id String @unique
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
