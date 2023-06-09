@@ -2,6 +2,7 @@ import assert from "assert";
 import bcrypt from "bcryptjs";
 import express from "express";
 import jsonwebtoken from "jsonwebtoken";
+import populateUser from "../../../pipes/populate-user";
 import prisma from "../../../prisma";
 import SignInRequest from "../../../schemas/requests/auth/sign-in-request";
 import SignInResponse from "../../../schemas/responses/auth/sign-in-response";
@@ -18,6 +19,7 @@ const signInHandler: express.RequestHandler = async (
 
   const user = await prisma.user.findUniqueOrThrow({
     where: { email },
+    ...populateUser,
   });
 
   assert(user.is_verified, "email is not verified");

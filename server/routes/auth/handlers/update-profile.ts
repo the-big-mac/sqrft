@@ -1,5 +1,6 @@
 import assert from "assert";
 import express from "express";
+import populateUser from "../../../pipes/populate-user";
 import prisma from "../../../prisma";
 import UpdateProfileRequest from "../../../schemas/requests/auth/update-profile-request";
 import UpdateProfileResponse from "../../../schemas/responses/auth/update-profile-response";
@@ -40,7 +41,7 @@ const updateProfileHandler: express.RequestHandler = async (
 
   const updatedUser = await prisma.user.findUniqueOrThrow({
     where: { id: userId },
-    include: { location: { include: { country: true } } },
+    ...populateUser,
   });
 
   res.status(200).json({ updatedUser });
