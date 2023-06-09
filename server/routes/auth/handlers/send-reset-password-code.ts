@@ -12,7 +12,7 @@ const sendResetPasswordCodeHandler: express.RequestHandler = async (
     SendResetPasswordCodeResponse,
     SendResetPasswordCodeRequest
   >,
-  res
+  res: express.Response<SendResetPasswordCodeResponse>
 ) => {
   const { email } = req.body;
 

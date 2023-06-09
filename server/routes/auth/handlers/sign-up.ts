@@ -4,12 +4,12 @@ import express from "express";
 import sendMail from "../../../lib/mail-service";
 import prisma from "../../../prisma";
 import SignUpRequest from "../../../schemas/requests/auth/sign-up-request";
-import SignInResponse from "../../../schemas/responses/auth/sign-in-response";
+import SignUpResponse from "../../../schemas/responses/auth/sign-up-response";
 import Dictionary from "../../../types/Dictionary";
 
 const signUpHandler: express.RequestHandler = async (
-  req: express.Request<Dictionary, SignInResponse, SignUpRequest>,
-  res
+  req: express.Request<Dictionary, SignUpResponse, SignUpRequest>,
+  res: express.Response<SignUpResponse>
 ) => {
   const { name, email, password } = req.body;
 

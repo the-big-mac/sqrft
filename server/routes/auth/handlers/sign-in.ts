@@ -9,7 +9,7 @@ import Dictionary from "../../../types/Dictionary";
 
 const signInHandler: express.RequestHandler = async (
   req: express.Request<Dictionary, SignInResponse, SignInRequest>,
-  res
+  res: express.Response<SignInResponse>
 ) => {
   const { email, password } = req.body;
 
@@ -20,15 +20,11 @@ const signInHandler: express.RequestHandler = async (
     where: { email },
   });
 
-  if (!user.is_verified) {
-    throw new Error("user is not verified");
-  }
+  assert(user.is_verified, "email is not verified");
 
   const isValidPassword = bcrypt.compareSync(password, user.password);
 
-  if (!isValidPassword) {
-    throw new Error("invalid password");
-  }
+  assert(isValidPassword, "invalid password");
 
   const { JWT_SECRET } = process.env;
 

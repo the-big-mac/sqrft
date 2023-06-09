@@ -12,7 +12,7 @@ const resendVerificationCodeHandler: express.RequestHandler = async (
     ResendVerificationCodeResponse,
     ResendVerificationCodeRequest
   >,
-  res
+  res: express.Response<ResendVerificationCodeResponse>
 ) => {
   const { email } = req.body;
 

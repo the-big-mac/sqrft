@@ -7,7 +7,7 @@ import Dictionary from "../../../types/Dictionary";
 
 const verifyEmailHandler: express.RequestHandler = async (
   req: express.Request<Dictionary, VerifyEmailResponse, VerifyEmailRequest>,
-  res
+  res: express.Response<VerifyEmailResponse>
 ) => {
   const { email, code } = req.body;
 
@@ -23,24 +23,26 @@ const verifyEmailHandler: express.RequestHandler = async (
 
   const now = new Date();
 
-  if (emailVerificationToken.expires_at.getTime() < now.getTime()) {
-    throw new Error("email verification token has expired");
-  }
+  assert(
+    emailVerificationToken.expires_at.getTime() >= now.getTime(),
+    "email verification token has expired"
+  );
 
-  if (emailVerificationToken.token === code) {
-    user = await prisma.user.update({
-      where: { id: user.id },
-      data: { is_verified: true },
-    });
+  assert(
+    emailVerificationToken.token === code,
+    "invalid email verification token"
+  );
 
-    await prisma.emailVerificationToken.deleteMany({
-      where: { user_id: user.id },
-    });
+  user = await prisma.user.update({
+    where: { id: user.id },
+    data: { is_verified: true },
+  });
 
-    res.status(200).json({ success: true });
-  } else {
-    throw new Error("invalid email verification token");
-  }
+  await prisma.emailVerificationToken.deleteMany({
+    where: { user_id: user.id },
+  });
+
+  res.status(200).json({ success: true });
 };
 
 export default verifyEmailHandler;
