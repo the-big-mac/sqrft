@@ -34,7 +34,7 @@ model Location {
   address_two String?
 
   city   String
-  region String
+  region String?
 
   country_id String
   country    Country @relation(fields: [country_id], references: [id])
