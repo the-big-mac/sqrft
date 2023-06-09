@@ -45,7 +45,7 @@ const signUpHandler: express.RequestHandler = async (
     `<p>Hey, <b>${user.name}</b>,<br />We are pleased to have you onboard with us!<br />Just to make sure that it's you, please verify your email address by entering the following code on the app: <b>${emailVerificationToken.token}<b>.<br /><br />Thanks,<br /><b>Team Sqrft</b>.`
   );
 
-  res.status(200).json({ success: true });
+  res.status(201).json({ success: true });
 };
 
 export default signUpHandler;
