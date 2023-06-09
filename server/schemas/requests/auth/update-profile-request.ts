@@ -7,11 +7,9 @@ interface _UserLocation {
   pincode: string | undefined;
   latitude: number;
   longitude: number;
-  userId: string;
 }
 
 interface UpdateProfileRequest {
-  userId: string;
   name: string | undefined;
   profilePicture: string | undefined;
   location: _UserLocation | undefined;
