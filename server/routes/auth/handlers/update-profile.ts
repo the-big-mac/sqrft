@@ -16,10 +16,12 @@ const updateProfileHandler: express.RequestHandler = async (
 
   assert(userId, "userId is required");
 
-  await prisma.user.updateMany({
-    where: { id: userId },
-    data: { name: name, profile_picture: profilePicture },
-  });
+  if (name || profilePicture) {
+    await prisma.user.updateMany({
+      where: { id: userId },
+      data: { name: name, profile_picture: profilePicture },
+    });
+  }
 
   if (location) {
     await prisma.location.deleteMany({ where: { user_id: userId } });
