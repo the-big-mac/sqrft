@@ -23,40 +23,7 @@ model User {
   email_verification_token EmailVerificationToken?
   reset_password_token     ResetPasswordToken?
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model Location {
-  id String @id @default(uuid())
-
-  address_one String
-  address_two String?
-
-  city   String
-  region String?
-
-  country_id String
-  country    Country @relation(fields: [country_id], references: [id])
-
-  pincode String?
-
-  latitude  Float
-  longitude Float
-
-  user_id String? @unique
-  user    User?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model Country {
-  id String @id @default(uuid())
-
-  name String @unique
-
-  locations Location[]
+  properties Property[]
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -83,6 +50,139 @@ model ResetPasswordToken {
 
   user_id String @unique
   user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+enum SaleType {
+  SALE
+  RENT
+}
+
+enum BuildingType {
+  RESIDENTIAL
+  COMMERCIAL
+  LAND
+}
+
+enum PropertyType {
+  APARTMENT
+  HOUSE
+  OFFICE_SPACE
+  SHOWROOM
+  SHOP
+  WAREHOUSE
+}
+
+enum PossessionStatus {
+  READY_TO_MOVE
+  UNDER_CONSTRUCTION
+}
+
+enum FurnishingStatus {
+  FURNISHED
+  SEMI_FURNISHED
+  UNFURNISHED
+}
+
+enum OfficeSpaceType {
+  FITTED
+  SEMI_FITTED
+  CORE
+}
+
+enum PantryType {
+  ALL
+  WET
+  DRY
+  NONE
+}
+
+model Amenity {
+  id String @id @default(uuid())
+
+  name String @unique
+
+  properties Property[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Property {
+  id String @id @default(uuid())
+
+  sale_type     SaleType
+  building_type BuildingType
+  property_type PropertyType?
+
+  property_images String[]
+
+  property_name String @unique
+
+  room_count     Int?
+  bathroom_count Int?
+
+  floor        Int
+  total_floors Int
+
+  area  Float
+  price Float
+
+  possession_status PossessionStatus
+  furnishing_status FurnishingStatus
+  office_space_type OfficeSpaceType?
+
+  pantry_type PantryType?
+
+  parking_count   Int
+  age_of_property Int
+
+  location Location?
+
+  amenities Amenity[]
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Location {
+  id String @id @default(uuid())
+
+  address_one String
+  address_two String?
+
+  city   String
+  region String?
+
+  country_id String
+  country    Country @relation(fields: [country_id], references: [id])
+
+  pincode String?
+
+  latitude  Float
+  longitude Float
+
+  user_id String? @unique
+  user    User?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  property_id String?   @unique
+  property    Property? @relation(fields: [property_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Country {
+  id String @id @default(uuid())
+
+  name String @unique
+
+  locations Location[]
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
