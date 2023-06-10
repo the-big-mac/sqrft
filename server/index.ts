@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import logger from "./lib/logger";
 import authRouter from "./routes/auth";
+import propertiesRouter from "./routes/properties";
 import GlobalErrorHandler from "./types/GlobalErrorHandler";
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.get(`/api/v1/health`, (req, res) => {
 
 // Register Routes
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/properties", propertiesRouter);
 
 const globalErrorHandler: GlobalErrorHandler = (error, req, res, next) => {
   logger.error(error);
