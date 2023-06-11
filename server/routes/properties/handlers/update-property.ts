@@ -19,10 +19,11 @@ const updatePropertyHandler: express.RequestHandler = async (
 
   assert(userId, "user id is required");
 
+  const propertyId = req.params.id;
   const body = req.body;
 
   let property = await prisma.property.findUniqueOrThrow({
-    where: { id: req.params.id },
+    where: { id: propertyId },
   });
 
   updatePropertyRequestValidator(req, property);
@@ -30,7 +31,7 @@ const updatePropertyHandler: express.RequestHandler = async (
   assert(property.user_id == userId, "you are not the owner of this property");
 
   property = await prisma.property.update({
-    where: { id: req.params.id },
+    where: { id: propertyId },
     data: {
       property_images: body.propertyImages,
       property_name: body.propertyName,

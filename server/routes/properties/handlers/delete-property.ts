@@ -12,13 +12,15 @@ const deletePropertyHandler: express.RequestHandler = async (
 
   assert(userId, "user id is required");
 
+  const propertyId = req.params.id;
+
   let property = await prisma.property.findUniqueOrThrow({
-    where: { id: req.params.id },
+    where: { id: propertyId },
   });
 
   assert(property.user_id == userId, "you are not the owner of this property");
 
-  await prisma.property.deleteMany({ where: { id: req.params.id } });
+  await prisma.property.deleteMany({ where: { id: propertyId } });
 
   res.status(200).json({ success: true });
 };
